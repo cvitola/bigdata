@@ -230,8 +230,56 @@ INNER JOIN content c ON p.id_content = c.id_content
 INNER JOIN oscar o ON p.id_content = o.id_content
 WHERE p.genre LIKE "drama"
 AND o.winner = 1 
-AND o.year_ceremony BETWEEN 2010 AND 2020
+AND o.year_ceremony BETWEEN 2010 AND 2020;
 
+#5E_ Seleccionar el título y el género de las películas puntuadas por IMDB entre 7 y 9. Obtener los títulos en idioma inglés.
 
+SELECT title_production as "Título", genre as "Genero"
+FROM production 
+WHERE imdb_score BETWEEN 7 AND 9;
 
+#5F_ Cuente la cantidad de títulos de cada género de la tabla productions. Ordene de manera descendente por las cantidades y ascendente por el género.
 
+SELECT genre as "Género", COUNT(*) as "Cantidad"
+FROM production
+GROUP BY genre
+ORDER BY genre ASC, COUNT(*) DESC;
+
+#5G_ Analizar la relación entre Budget y Box Office. Calcular el ratio Budget/Box Office para las peliculas con un puntaje IMDB entre 7 y 9, sin mostrar nulos y no repetidos.
+
+SELECT DISTINCT p.title_production as "Título", o.budget_x_million/o.box_office_x_million as "Relacion"
+FROM oscar o
+INNER JOIN production p ON p.id_content = o.id_content
+WHERE o.budget_x_million IS NOT NULL 
+AND o.box_office_x_million IS NOT NULL
+AND p.imdb_score BETWEEN 7 AND 9;
+
+#5H_ Obtener las películas que ganaron el Oscar a Best Picture, ordenadas de manera descendente por año ganador.
+
+SELECT title_oscar as "Película", year_ceremony AS "Año en que ganó"
+FROM oscar
+WHERE category LIKE "Best Picture"
+AND winner = 1
+ORDER BY year_ceremony DESC;
+
+#5I_ Mostrar el título y el año de ceremonia de los oscar para las peliculas puntuadas por IMDB entre 7 y 9. Ordenarlos alfabéticamente por títulos y de mayor a menor por año de ceremonia.
+
+SELECT o.title_oscar AS "Título", o.year_ceremony AS "Año Ceremonia"
+FROM oscar o 
+INNER JOIN production p ON p.id_content = o.id_content
+WHERE p.imdb_score BETWEEN 7 AND 9
+ORDER BY o.title_oscar, o.year_ceremony;
+
+#5J_ Mostrar una lista de las películas originales de netflix ganadoras del oscar (si las hubiera) mostrando las columnas title, category, genre runtime, el imdb_score, la premiere y el año de la ceremonia.
+
+SELECT p.title_production as "Titulo", o.category as "Categoria", p.genre as "Genero", p.runtime AS "Duracion", p.imdb_score as "Puntaje", p.premiere AS "Premiere", o.year_ceremony AS "Año de Ceremonia"
+FROM production p
+INNER JOIN oscar o ON o.id_content = p.id_content
+WHERE o.winner = 1;
+
+#5K_  Mostrar una lista de las nominaciones al oscar de películas originales de netflix (si las hubiera) que no fueron ganadoras del premio,mostrando las columnas título, category y año de la ceremonia.
+
+SELECT p.title_production as "Titulo", o.category as "Categoria", o.year_ceremony AS "Año de Ceremonia"
+FROM production p
+INNER JOIN oscar o ON o.id_content = p.id_content
+WHERE o.winner = 0;
