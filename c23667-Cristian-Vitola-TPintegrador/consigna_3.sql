@@ -193,6 +193,7 @@ UNION
     COUNT(DISTINCT rotten_tomatoes) AS distintos
 FROM oscar);
 
+
 #5A_ Seleccionar los títulos con runtime superior a 90 y lenguaje Francés. Incluir el tipo de contenido. Ordenar los títulos de menor a mayor.
 SELECT o.title_oscar as "Título", c.type as "Tipo de Contenido"
 FROM oscar o 
@@ -283,3 +284,19 @@ SELECT p.title_production as "Titulo", o.category as "Categoria", o.year_ceremon
 FROM production p
 INNER JOIN oscar o ON o.id_content = p.id_content
 WHERE o.winner = 0;
+
+#7I. Cuente los tipos de contenido de la tabla “content”. Muestre la descripción de tipos en el resultado de la consulta.
+SELECT type as "Tipo Contenido", COUNT(type) as "Cantidad "
+FROM content
+GROUP BY type;
+
+#7II. Seleccionar títulos con duración igual a 90 min, que provengan únicamente de United States. Mostrar listed_in. Ordenar los títulos de menor a mayor.
+
+SELECT title_content, listed_in
+FROM content
+WHERE duration = 90
+AND country = "United States"
+ORDER BY title_content ASC;
+
+#7III. Realizar una consulta similar a la anterior, en donde el campo ‘country’ contenga a United States o a UNITED STATES y el título listado contenga a ‘Horror Movie’ O HORROR MOVIE.
+#7IV.  Mostar la lista de películas puntuadas 85 o más por Metascore que ganaron el Oscar.
